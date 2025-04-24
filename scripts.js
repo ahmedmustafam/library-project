@@ -27,11 +27,30 @@ addBookToLibrary(secondBook);
 
 const libraryDisplay = document.createElement("div");
 
-myLibrary.forEach((book) => {
-  const bookDetails = `Title: ${book.title}, Author: ${book.author}, Number of Pages: ${book.numPages}, Completed: ${book.completed}, ID: ${book.id}`;
-  const bookElement = document.createElement("p");
-  bookElement.textContent = bookDetails;
-  libraryDisplay.appendChild(bookElement);
-});
+function showBooks() {
+  libraryDisplay.textContent = "";
+  myLibrary.forEach((book) => {
+    const bookDetails = `Title: ${book.title}, Author: ${book.author}, Number of Pages: ${book.numPages}, Completed: ${book.completed}, ID: ${book.id}`;
+    const bookElement = document.createElement("div");
+    bookElement.textContent = bookDetails;
+    bookElement.classList.toggle("books");
+    libraryDisplay.appendChild(bookElement);
+  });
+  const libDiv = document.querySelector(".first");
+  libDiv.appendChild(libraryDisplay);
+}
 
-document.body.appendChild(libraryDisplay);
+showBooks();
+
+const form = document.getElementById("Form");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const bookTitle = document.getElementById("title").value;
+  const bookAuthor = document.getElementById("author").value;
+  const bookPages = parseInt(document.getElementById("numpages").value);
+  const bookComplete = document.getElementById("completed").value;
+
+  addBookToLibrary(new Book(bookTitle, bookAuthor, bookPages, bookComplete));
+  showBooks();
+});
