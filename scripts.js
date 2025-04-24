@@ -17,13 +17,8 @@ function addBookToLibrary(book) {
   console.log(`${book.title} has been added to library`);
 }
 
-// Testing the script
-
 const testBook = new Book("Title", "Author", 55, "Yes");
 addBookToLibrary(testBook);
-
-const secondBook = new Book("Second", "Myself", 200, "No");
-addBookToLibrary(secondBook);
 
 const libraryDisplay = document.createElement("div");
 
@@ -34,13 +29,34 @@ function showBooks() {
     const bookElement = document.createElement("div");
     bookElement.textContent = bookDetails;
     bookElement.classList.toggle("books");
+    bookElement.setAttribute("data-id", `${book.id}`);
+
+    const bookButton = document.createElement("button");
+    bookButton.classList.toggle("removeBook");
+    bookButton.textContent = "Remove Book";
+    bookButton.setAttribute("data-id", `${book.id}`);
+
+    bookButton.addEventListener("click", () => {
+      removeBook(book.id);
+    });
     libraryDisplay.appendChild(bookElement);
+    libraryDisplay.appendChild(bookButton);
   });
+
   const libDiv = document.querySelector(".first");
   libDiv.appendChild(libraryDisplay);
 }
 
 showBooks();
+
+function removeBook(bookId) {
+  const bookIndex = myLibrary.findIndex((book) => book.id === bookId);
+
+  if (bookIndex !== -1) {
+    myLibrary.splice(bookIndex, 1);
+    showBooks();
+  }
+}
 
 const form = document.getElementById("Form");
 form.addEventListener("submit", (e) => {
@@ -49,7 +65,9 @@ form.addEventListener("submit", (e) => {
   const bookTitle = document.getElementById("title").value;
   const bookAuthor = document.getElementById("author").value;
   const bookPages = parseInt(document.getElementById("numpages").value);
-  const bookComplete = document.getElementById("completed").value;
+  const bookComplete = document.getElementById("completed").checked
+    ? "Yes"
+    : "No";
 
   addBookToLibrary(new Book(bookTitle, bookAuthor, bookPages, bookComplete));
   showBooks();
