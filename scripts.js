@@ -12,6 +12,10 @@ function Book(title, author, numPages, completed) {
   this.id = crypto.randomUUID();
 }
 
+Book.prototype.toggleReadStatus = function () {
+  this.completed = this.completed === "Yes" ? "No" : "Yes";
+}
+
 function addBookToLibrary(book) {
   myLibrary.push(book);
   console.log(`${book.title} has been added to library`);
@@ -36,11 +40,23 @@ function showBooks() {
     bookButton.textContent = "Remove Book";
     bookButton.setAttribute("data-id", `${book.id}`);
 
+    const readButton = document.createElement("button");
+    readButton.classList.toggle("toggleread");
+    readButton.textContent = "Toggle Complete Status";
+    readButton.setAttribute("data-id", `${book.id}`);
+
     bookButton.addEventListener("click", () => {
       removeBook(book.id);
     });
+
+    readButton.addEventListener("click", () => {
+      toggleRead(book.id);
+    })
+
     libraryDisplay.appendChild(bookElement);
     libraryDisplay.appendChild(bookButton);
+    libraryDisplay.appendChild(readButton);
+
   });
 
   const libDiv = document.querySelector(".first");
@@ -54,6 +70,15 @@ function removeBook(bookId) {
 
   if (bookIndex !== -1) {
     myLibrary.splice(bookIndex, 1);
+    showBooks();
+  }
+}
+
+function toggleRead(bookId) {
+  const book = myLibrary.find((book) => book.id === bookId);
+
+  if (book) {
+    book.toggleReadStatus();
     showBooks();
   }
 }
